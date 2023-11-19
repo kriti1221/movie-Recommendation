@@ -1,6 +1,7 @@
 const { initializeApp } = require('firebase/app');
 const { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc } = require('firebase/firestore');
-const express = require('express'); const axios = require('axios');
+const express = require('express');
+const axios = require('axios');
 const path = require('path');
 
 const firebaseConfig = {
@@ -12,10 +13,13 @@ const firebaseConfig = {
   appId: "1:291578402186:web:93458a995943cbb5906473",
   measurementId: "G-J808HK9372"
 };
+
 // Initialize Firebase app
 const firebaseApp = initializeApp(firebaseConfig);
+
 // Explicitly specify Firestore
 const db = getFirestore(firebaseApp);
+
 // Reference to the movies collection
 const moviesCollection = collection(db, 'movies');
 const app = express();
@@ -45,7 +49,8 @@ app.get('/getMovies/:genreId', async (req, res) => {
     const selectedGenre = req.params.genreId;
     // Check rate limit before making the API call 
     const rateLimitResult = await checkRateLimit(selectedGenre);
-    if (rateLimitResult.allowed) { // Make an API call to fetch recommendations from the third-party service
+    if (rateLimitResult.allowed) {
+      // Make an API call to fetch recommendations from the third-party service
       const discoverMovieEndpoint = 'discover/movie';
       const requestParams = `?api_key=${tmdbKey}&with_genres=${selectedGenre}`;
       const urlToFetch = tmdbBaseUrl + discoverMovieEndpoint + requestParams;
@@ -81,7 +86,8 @@ async function checkRateLimit(genreId) {
     const genreDoc = await getDoc(genreDocRef);
     if (genreDoc.exists()) {
       const lastTimestamp = genreDoc.data().timestamp;
-      const currentTime = Date.now(); const timeWindow = 2 * 60 * 1000; // 2 minutes 
+      const currentTime = Date.now();
+      const timeWindow = 2 * 60 * 1000; // 2 minutes 
       const maxApiCalls = 5;
       if (currentTime - lastTimestamp < timeWindow) {
         const apiCallCount = genreDoc.data().apiCallCount || 0;
@@ -134,4 +140,4 @@ function getRandomMovie(movies) {
   const randomMovie = movies[randomIndex];
   return randomMovie;
 }
-app.listen(port, () => { console.log(`Server is running on http://localhost:${port}`); });
+app.listen(process.env.PORT || port, () => { console.log(`Server is running on http://localhost:${port}`); });
