@@ -1,0 +1,122 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Recommendation</title>
+  <link rel="stylesheet" href="StyleSolution.css">
+</head>
+
+<body>
+  <header>
+    <h1 id="appTitle">Movie Recommendation</h1>
+  </header>
+  <form id="genreForm"> <label>Choose a genre:</label>
+    <select name="genres" id="genres"> </select>
+  </form>
+  <button id="playBtn">Search</button>
+  <div id="movieInfo">
+    <div id="moviePoster"></div>
+    <div id="movieText"></div>
+  </div>
+  <div id="likeOrDislikeBtns" hidden> <button id="likeBtn">Like</button>
+    <button id="dislikeBtn">Dislike</button>
+    <button id="nextBtn">Next</button>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const playBtn = document.getElementById('playBtn');
+      const genreDropdown = document.getElementById('genres');
+      const likeBtn = document.getElementById('likeBtn');
+      const dislikeBtn = document.getElementById('dislikeBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const moviePoster = document.getElementById('moviePoster');
+      const movieText = document.getElementById('movieText');
+      playBtn.addEventListener('click', function () {
+        const selectedGenre = genreDropdown.value;
+        if (selectedGenre) {
+          getMovies(selectedGenre);
+        } else {
+          console.error('No genre selected');
+        }
+      });
+      likeBtn.addEventListener('click', function () {
+        clearCurrentMovie();
+        showRandomMovie();
+      });
+      dislikeBtn.addEventListener('click', function () {
+        clearCurrentMovie();
+        showRandomMovie();
+      });
+      nextBtn.addEventListener('click', function () {
+        clearCurrentMovie();
+        showRandomMovie();
+      });
+
+      async function populateGenreDropdown() {
+        try {
+          const response = await fetch('/getGenres');
+          if (!response.ok) {
+            throw new Error(`Failed to fetch genres (${response.status})`);
+          }
+          const genres = await response.json();
+          genres.forEach(genre => {
+            let option = document.createElement('option');
+            option.value = genre.id;
+            option.text = genre.name;
+            genreDropdown.appendChild(option);
+          });
+        } catch (error) {
+          console.error('Error fetching genres:', error);
+        }
+      }
+
+      async function getMovies(selectedGenre) {
+        try {
+          const response = await fetch(`/getMovies/${selectedGenre}`);
+          if (!response.ok) {
+            throw new Error(`Failed to fetch movies (${response.status})`);
+          }
+          const randomMovie = await response.json();
+          if (randomMovie) {
+            displayMovie(randomMovie);
+          } else {
+            console.error('No movie found for the selected genre');
+          }
+        } catch (error) { console.error('Error fetching movies:', error); }
+      }
+      function displayMovie(movieInfo) {
+        const moviePosterDiv = document.getElementById('moviePoster'); const movieTextDiv = document.getElementById('movieText');
+        // Clear previous content 
+        moviePosterDiv.innerHTML = ''; movieTextDiv.innerHTML = '';
+        // Create and append movie poster 
+        const moviePoster = document.createElement('img');
+        moviePoster.src = `https://image.tmdb.org/t/p/original/${movieInfo.poster_path}`;
+        moviePoster.alt = movieInfo.title; moviePosterDiv.appendChild(moviePoster);
+        // Create and append movie title
+        const titleHeader = document.createElement('h1');
+        titleHeader.textContent = movieInfo.title; movieTextDiv.appendChild(titleHeader);
+        // Create and append movie overview 
+        const overviewParagraph = document.createElement('p');
+        overviewParagraph.textContent = movieInfo.overview;
+        movieTextDiv.appendChild(overviewParagraph);
+        // Show the like/dislike buttons 
+        const likeOrDislikeBtnsDiv = document.getElementById('likeOrDislikeBtns');
+        likeOrDislikeBtnsDiv.removeAttribute('hidden');
+      }
+      function clearCurrentMovie() {
+        const moviePosterDiv = document.getElementById('moviePoster');
+        const movieTextDiv = document.getElementById('movieText');
+        moviePosterDiv.innerHTML = ''; movieTextDiv.innerHTML = '';
+      }
+      function showRandomMovie() { getMovies(genreDropdown.value); }
+      // Initialize the page 
+      populateGenreDropdown();
+    }); 
+  </script>
+  <script src="solution.js"></script>
+</body>
+
+</html>

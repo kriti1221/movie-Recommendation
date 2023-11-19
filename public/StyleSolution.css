@@ -1,0 +1,110 @@
+body {
+    background-color: #eb6882;
+    color: #0a0408;
+    margin: 0;
+    padding: 0;
+    font-family: 'Questrial', sans-serif;
+}
+
+#appTitle {
+    text-align: center;
+    font-family: 'Staatliches', sans-serif;
+    font-size: 80px;
+    margin: 20px 0;
+}
+
+#genreForm,
+#playBtn {
+    text-align: center;
+    font-family: 'Fredoka One', sans-serif;
+    margin: 20px auto;
+}
+
+#genreForm label,
+#playBtn {
+    display: block;
+    margin-bottom: 10px;
+}
+
+select#genres {
+    width: 220px;
+    height: 40px;
+}
+
+#movieInfo {
+    width: 80%;
+    margin: 32px auto;
+    overflow: hidden;
+    display: flex;
+    /* Use flex display to place #moviePoster and #movieText in the same row */
+}
+
+#moviePoster,
+#movieText {
+    width: 48%;
+    box-sizing: border-box;
+}
+
+#moviePoster img {
+    max-width: 50%;
+    max-height: 100vh;
+    /* Set maximum height to 100% of the viewport height */
+    object-fit: contain;
+    /* Maintain aspect ratio while fitting into the specified dimensions */
+    display: block;
+    margin: auto;
+}
+
+#movieText {
+    color: #FEFBEA;
+    line-height: 1.5;
+    float: right;
+}
+
+#movieTitle,
+#movieOverview {
+    padding: 16px;
+}
+
+#likeOrDislikeBtns {
+    text-align: center;
+    margin: 20px 0;
+}
+
+#likeBtn,
+#dislikeBtn {
+    padding: 15px 25px;
+    font-size: 20px;
+    border-radius: 12px;
+    border-style: none;
+    cursor: pointer;
+}
+
+#likeBtn {
+    background-color: #249e57;
+    color: darkgreen;
+}
+
+#dislikeBtn {
+    background-color: #c74a4a;
+    color: #910000;
+}
+
+#playBtn,
+#nextBtn {
+    margin-top: 20px;
+    font-size: 25px;
+    padding: 7px 10px;
+    border-radius: 10px;
+    border-style: none;
+    background-color: #B97828;
+    color: #fdc238;
+    cursor: pointer;
+}
+
+#nextBtn {
+    margin-left: 10px;
+    /* Adjust the margin-left for spacing between buttons */
+    background-color: #249e57;
+    color: darkgreen;
+}
